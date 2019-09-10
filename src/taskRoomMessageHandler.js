@@ -1,5 +1,5 @@
 import {tryParseJson, minimalNewNodeJoinRaDeposit, expectNumberOfRemoteAttestatorsToBeVoted
-  ,minComputeGroupMembersToStartCompute, howManyBlockToWaitAfterComputeTaskCompletedBeforeForceSettlement } from '../shared/constValue'
+  ,minComputeGroupMembersToStartCompute, howManyBlockToWaitAfterComputeTaskCompletedBeforeForceSettlement } from 'leo.simulator.shared';//'constValue'
 import {sha256} from 'js-sha256';
 import { ecvrf, sortition} from 'vrf.js';
 import Big from 'big.js';

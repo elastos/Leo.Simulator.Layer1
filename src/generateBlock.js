@@ -1,6 +1,6 @@
 import {constValue} from 'leo.simulator.shared';
 const log=()=>{};//skip for now
-import { o } from '../shared/utilities';
+import { o } from 'leo.simulator.shared';
 
 const {totalCreditToken, minRemoteAttestatorsToPassRaTask, minBlockDelayRequiredBeforeComputeStart,
   maxBlockDelayRequiredBeforeComputeStart, initialCreditIssuedWhenPassRa, awardCreditWhenRaSuccessful, 
