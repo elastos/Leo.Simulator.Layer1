@@ -1,0 +1,54 @@
+{
+  "name": "leo-node-simulator",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Kevin G Zhang",
+  "license": "Apache 2.0",
+  "scripts": {
+    "start": "node --require @babel/register ./src",
+    "debug": "node --inspect --require @babel/register ./src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elastos/Leo.Simulator.Layer1"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.5.5",
+    "auto-bind": "^2.1.0",
+    "bcryptjs": "^2.4.3",
+    "browserify": "^16.2.3",
+    "colors": "^1.3.1",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validation": "^1.0.2",
+    "helmet": "^3.20.0",
+    "http-status": "^1.3.2",
+    "hyperdiff": "^2.0.5",
+    "ipfs": "^0.37.1",
+    "ipfs-pubsub-room": "github:kevingzhang/ipfs-pubsub-room",
+    "js-sha256": "^0.9.0",
+    "leo.simulator.shared": "git+https://github.com/elastos/Leo.Simulator.Shared.git",
+    "method-override": "^3.0.0",
+    "peer-id": "^0.13.2",
+    "underscore": "^1.9.1",
+    "vrf.js": "0.0.4",
+    "yargs": "^12.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-jest": "^24.9.0",
+    "babel-polyfill": "^6.26.0",
+    "babelify": "^10.0.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^6.2.0",
+    "nodemon": "^1.19.2",
+    "reify": "^0.20.12"
+  }
+}
