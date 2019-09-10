@@ -8,6 +8,7 @@ import {utilities} from 'leo.simulator.shared';
 import inquirer from 'inquirer';
 import {blockMgr as BlockMgr} from 'leo.simulator.shared';
 const {o} = utilities;
+const cors = require('cors');
 
 exports.start = ()=>{  // Prompt user to input data in console.
   console.clear();
@@ -24,7 +25,7 @@ exports.start = ()=>{  // Prompt user to input data in console.
   o('log', "|")
   o('log', "|____________________________________________")
   const app = require('./config/express');
-
+  app.use(cors());
   var questions = [{
     type: 'input',
     name: '',
