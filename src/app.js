@@ -67,7 +67,6 @@ exports.start = ()=>{  // Prompt user to input data in console.
     }else{
       swarmUrl = '/ip4/' + answers['swarmUrl'] + '/tcp/9090/ws/p2p-websocket-star';
     }
-    console.log('swarmUrl:', swarmUrl);
     const roomPostfixUserInput = answers['roomPostfixUserInput'];
     const blockGenerationInterval = parseInt(answers['blockGenerationInterval']) * 1000;  
     main(app, roomPostfixUserInput, blockGenerationInterval, swarmUrl);
@@ -123,6 +122,7 @@ const main = (app, randRoomPostfix, blockGenerationInterval, swarmUrl)=>{
 };
 
 const ipfsStart = async (swarmUrl)=>{
+  console.log('swarmUrl:|', swarmUrl, '|');
   
   const ipfs = await IPFS.create({
     repo: 'ipfs-storage-no-git/poc/' + Math.random(),
