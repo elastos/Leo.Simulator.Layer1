@@ -32,7 +32,7 @@
     "ipfs-pubsub-room": "github:kevingzhang/ipfs-pubsub-room",
     "joi": "^14.3.1",
     "js-sha256": "^0.9.0",
-    "leo.simulator.shared": "file:../Leo.Simulator.Shared",
+    "leo.simulator.shared": "git+https://github.com/elastos/Leo.Simulator.Shared.git",
     "method-override": "^3.0.0",
     "peer-id": "^0.13.2",
     "regenerator-runtime": "^0.13.3",
