@@ -2,14 +2,14 @@ const IPFS = require('ipfs');
 const _ = require( 'lodash');
 // require("babel-core/register");
 // require("babel-polyfill");
-
+import inquirer from 'inquirer';
 const {channelListener} = require('./channelListener');
 const {generateBlock} = require('./generateBlock');
 import PeerUserCache from './onlinePeerUser';
 const {utils} = require('vrf.js');
-import {utilities} from 'leo.simulator.shared';
-import inquirer from 'inquirer';
-import {blockMgr as BlockMgr} from 'leo.simulator.shared';
+import {utilities, blockMgr as BlockMgr} from 'leo.simulator.shared';
+
+// import {blockMgr as BlockMgr} from 'leo.simulator.shared';
 const {o} = utilities;
 
 // Prompt user to input data in console.

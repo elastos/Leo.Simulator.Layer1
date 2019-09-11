@@ -1,10 +1,14 @@
 
+
+import {utilities} from 'leo.simulator.shared';
+
 const express = require('express');
 
 const {generateBlock} = require('../../generateBlock.js');
-import {o, tryParseJson} from '../../../shared/utilities';
 const _ = require('lodash');
 const router = express.Router();
+
+const {o, tryParseJson} = utilities;
 
 const result = (res, code, dataOrError, message='')=>{
   const json = {
