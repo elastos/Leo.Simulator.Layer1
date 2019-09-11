@@ -12,6 +12,7 @@ exports.join = (ipfs, room, options, presetUsers)=>{
       type:'reqUserInfo'
     }
     //room.sendTo(peer, JSON.stringify(reqObj));
+    //console.log("Sending rpc request to new peer for userInfo");
     room.rpcRequest(peer, JSON.stringify(reqObj), (res, err, withNewRequestGuid)=>{
       //console.log("finally I got the rpcResponse like this,", res, err, withNewRequestGuid);
       if(err){
@@ -35,6 +36,8 @@ exports.join = (ipfs, room, options, presetUsers)=>{
           })
           room.rpcResponse(peer, JSON.stringify({userInfo:firstOffLineUser}), withNewRequestGuid);
           global.onlinePeerUserCache.put(peer, firstOffLineUser.name);
+          //console.log('sending back user info to new peer,', firstOffLineUser);
+          //console.log('current onlinePeerUserCache', global.onlinePeerUserCache);
         }else{
           console.error("peer ask for requestRandomUserInfo but did not send me the callback function 'withNewRequestGuid'");
         }
