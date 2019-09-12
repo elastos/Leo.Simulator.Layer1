@@ -83,3 +83,5 @@ ipfs-storage-no-git
 # reify cach #
 #################
 .reify-cache
+
+ipfs-storage-no-git

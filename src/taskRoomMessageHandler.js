@@ -5,7 +5,7 @@ import {sha256} from 'js-sha256';
 import { ecvrf, sortition} from 'vrf.js';
 import Big from 'big.js';
 
-import {utilities} from 'leo.simulator.shared';
+import {utilities} from 'leo.simulator.shared/shared';
 
 const {o} = utilities;
 const log=()=>{};//Jacky, disable for now
