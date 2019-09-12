@@ -4,10 +4,12 @@ const {o} = utilities;
 
 const log=()=>{};//skip for now
 
-const {totalCreditToken, minRemoteAttestatorsToPassRaTask, minBlockDelayRequiredBeforeComputeStart,
-  maxBlockDelayRequiredBeforeComputeStart, initialCreditIssuedWhenPassRa, awardCreditWhenRaSuccessful, 
-  penaltyCreditWhenRaFail, minComputeGroupMembersToStartCompute, creditRewardToExecutorAfterSuccessfulComputeTask, 
-  creditRewardToMonitorAfterSuccessfulComputeTask } = constValue;
+const {totalCreditToken, minRemoteAttestatorsToPassRaTask, minBlockDelayRequiredBeforeComputeStart} = constValue;
+const {maxBlockDelayRequiredBeforeComputeStart, initialCreditIssuedWhenPassRa, awardCreditWhenRaSuccessful} = constValue;
+const {penaltyCreditWhenRaFail, minComputeGroupMembersToStartCompute, creditRewardToExecutorAfterSuccessfulComputeTask} = constValue;
+const {creditRewardToMonitorAfterSuccessfulComputeTask} = constValue;
+import {utilities} from 'leo.simulator.shared';
+const {o} = utilities;
 exports.generateBlock = async ()=>{
   const {ipfs, globalState, pubsubRooms} = global;
   const {blockRoom} = pubsubRooms;
@@ -90,6 +92,7 @@ const runSettlementBeforeNewBlock = ()=>{
           else{
             //we did not wait enough time but the followUps number has reached the minimal requriement, so we can start now
             o('debug', 'we did not wait enough time but the followUps number has reached the minimal requriement, so we can start now');
+            
             globalState.pendingTasks[taskCid].type = 'computeTaskStart';
             break;
           }
