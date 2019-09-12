@@ -8,8 +8,6 @@ const {totalCreditToken, minRemoteAttestatorsToPassRaTask, minBlockDelayRequired
 const {maxBlockDelayRequiredBeforeComputeStart, initialCreditIssuedWhenPassRa, awardCreditWhenRaSuccessful} = constValue;
 const {penaltyCreditWhenRaFail, minComputeGroupMembersToStartCompute, creditRewardToExecutorAfterSuccessfulComputeTask} = constValue;
 const {creditRewardToMonitorAfterSuccessfulComputeTask} = constValue;
-import {utilities} from 'leo.simulator.shared';
-const {o} = utilities;
 exports.generateBlock = async ()=>{
   const {ipfs, globalState, pubsubRooms} = global;
   const {blockRoom} = pubsubRooms;
