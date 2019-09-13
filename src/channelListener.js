@@ -2,6 +2,7 @@ import taskRoomMessageHandler from './taskRoomMessageHandler';
 import Room from 'ipfs-pubsub-room';
 import townHallJoinLeftHandler from './townHallJoinLeftHandler';
 import {utilities} from 'leo.simulator.shared';
+import townHallRpcHandler from './townHallRpcHandler'
 const {o} = utilities;
 const createRandomGeoLocation = (n)=>{
   var data=[];   
@@ -51,7 +52,7 @@ const createGenesysBlock = (presetUsers)=>{
 }
 
 
-exports.channelListener = (randRoomPostfix, presetUsers)=>{
+exports.channelListener = (randRoomPostfix, presetUsers, rpcEvent)=>{
   const ipfs = global.ipfs;
   //We assume every time we start the demo, it starts from genesis block
   global.globalState = createGenesysBlock(presetUsers);
@@ -73,6 +74,8 @@ exports.channelListener = (randRoomPostfix, presetUsers)=>{
   townHall.on('error', (err)=>o('error', `*******   townHall has pubsubroom error,`, err));
   townHall.on('stopping', ()=>o('error', `*******   townHall is stopping`));
   townHall.on('stopped', ()=>o('error', `*******   townHall is stopped`));
+  townHall.on('rpcDirect', townHallRpcHandler.rpcDirect);
+    
   
   const blockRoom = Room(ipfs, 'blockRoom' + randRoomPostfix);
   blockRoom.on('peer joined', (peer)=>peer);//console.log(console.log('peer ' + peer + ' joined task room')));
@@ -81,6 +84,11 @@ exports.channelListener = (randRoomPostfix, presetUsers)=>{
   blockRoom.on('error', (err)=>o('error', `*******   blockRoom has pubsubroom error,`, err));
   blockRoom.on('stopping', ()=>o('error', `*******   blockRoom is stopping`));
   blockRoom.on('stopped', ()=>o('error', `*******   blockRoom is stopped`));
+
+
+  rpcEvent.on("rpcRequest", townHallRpcHandler.rpcRequest(townHall));
+  rpcEvent.on("rpcResponseWithNewRequest", townHallRpcHandler.rpcResponseWithNewRequest(townHall));
+  rpcEvent.on("rpcResponse", townHallRpcHandler.rpcResponse(townHall));
   
-  return {pubsubRooms:{taskRoom, townHall, blockRoom}};
+  return {taskRoom, townHall, blockRoom};
 }

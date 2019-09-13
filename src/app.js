@@ -9,6 +9,7 @@ import inquirer from 'inquirer';
 import {blockMgr as BlockMgr} from 'leo.simulator.shared';
 const {o} = utilities;
 const cors = require('cors');
+import events from 'events';
 
 exports.start = ()=>{  // Prompt user to input data in console.
   console.clear();
@@ -83,6 +84,7 @@ const main = (app, randRoomPostfix, blockGenerationInterval, swarmUrl)=>{
     global.ipfs = ipfs;
     global.blockMgr = new BlockMgr(ipfs);
     global.randRoomPostfix = randRoomPostfix;
+    global.rpcEvent = new events.EventEmitter();
     let presetUsers = [];
     for(let i = 0; i < 20; i ++){
       const [publicKey, privateKey] = utils.generatePair();
@@ -95,9 +97,9 @@ const main = (app, randRoomPostfix, blockGenerationInterval, swarmUrl)=>{
     }
     //
     global.presetUsers = presetUsers;
-    return channelListener(randRoomPostfix, presetUsers);
+    return channelListener(randRoomPostfix, presetUsers, global.rpcEvent);
   })
-  .then(({pubsubRooms})=>{
+  .then((pubsubRooms)=>{
     global.pubsubRooms = pubsubRooms;
     
     const firstBlockDelay = 1000 * 10;
