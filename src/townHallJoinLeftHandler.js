@@ -19,7 +19,11 @@ exports.join = (ipfs, room, options, presetUsers)=>{
         return console.error(`reqUserInfo to ${peer} response error`, err);
       }
       const {userInfo, type} = res;
-      if(userInfo){
+      if(type == 'resUserFromWebUi'){
+        global.webUiPeerId = peer;
+        console.log("I have got the WebUI's peerId:", global.webUiPeerId);
+      }
+      else if(userInfo){
         global.onlinePeerUserCache.put(peer, userInfo.userName, userInfo);
       
         log('user_online', {
