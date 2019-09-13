@@ -8,7 +8,6 @@ import {utilities} from 'leo.simulator.shared';
 import inquirer from 'inquirer';
 import {blockMgr as BlockMgr} from 'leo.simulator.shared';
 const {o} = utilities;
-const cors = require('cors');
 import events from 'events';
 
 exports.start = ()=>{  // Prompt user to input data in console.
@@ -25,8 +24,7 @@ exports.start = ()=>{  // Prompt user to input data in console.
   o('log', "|")
   o('log', "|")
   o('log', "|____________________________________________")
-  const app = require('./config/express');
-  app.use(cors());
+
   var questions = [{
     type: 'input',
     name: '',
@@ -70,13 +68,13 @@ exports.start = ()=>{  // Prompt user to input data in console.
     }
     const roomPostfixUserInput = answers['roomPostfixUserInput'];
     const blockGenerationInterval = parseInt(answers['blockGenerationInterval']) * 1000;  
-    main(app, roomPostfixUserInput, blockGenerationInterval, swarmUrl);
+    main(roomPostfixUserInput, blockGenerationInterval, swarmUrl);
     
   });
 };
 
 
-const main = (app, randRoomPostfix, blockGenerationInterval, swarmUrl)=>{
+const main = (randRoomPostfix, blockGenerationInterval, swarmUrl)=>{
   ipfsStart(swarmUrl)
   .then((ipfs)=>{
     global.onlinePeerUserCache = new PeerUserCache();
@@ -117,10 +115,6 @@ const main = (app, randRoomPostfix, blockGenerationInterval, swarmUrl)=>{
     }
 
   })
-
-  // listen to requests
-  app.listen(3000, () => console.log(`server started`));
-
 };
 
 const ipfsStart = async (swarmUrl)=>{

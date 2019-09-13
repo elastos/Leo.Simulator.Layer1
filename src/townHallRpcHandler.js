@@ -1,17 +1,54 @@
 import {utilities} from 'leo.simulator.shared';
 const {o, tryParseJson} = utilities;
+import {generateBlock} from './generateBlock';
 
 const webUiAction = ({from, guid, messageObj})=>{
   if(from != global.webUiPeerId){
     return o('error', 'Only WebUi peer can send me the webUiAction message.')
   }
-  o('log', 'I have got WebUi message', messageObj);
-  global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message:`{res:'ok'}`, guid});
-  o('log', 'I have response WebUi OK');
+  const {initiatorUserName, action} = messageObj;	
+  const onlineUserInfo = global.onlinePeerUserCache.getByUserName(initiatorUserName);	
+  if(! onlineUserInfo)	
+    return global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message: null , guid, err:'cannot find this online user:' + initiatorUserName});
+    
+  const newWrapper = {	
+    type:'simulatorRequestAction',	
+    action	
+  }	
+  global.pubsubRooms.townHall.rpcRequest(onlineUserInfo.peerId, JSON.stringify(newWrapper), (result, error)=>{	
+    console.log("response from initiator", result, error);	
+    if(error){	
+      return global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message: null , guid, err:error});
+    }	
+    else{	
+      global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message:`{res:'ok'}`, guid});
+      o('log', 'I have response WebUi OK');
+    }	
+  });	  
+}
+
+const webUiGenerateBlock =  ({from, guid, messageObj})=>{
+  
+  const asyncWrapper = async ()=>{
+    const ipfs = global.ipfs;
+    const globalState = global.globalState;
+    const rooms = global.pubsubRooms;
+    const {blockRoom} = rooms;
+    await generateBlock({ipfs, globalState, blockRoom});
+    global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message:`{res:'ok'}`, guid});
+    
+    return o('log', 'I have response WebUi OK');
+  }
+  try{
+    asyncWrapper();
+  }
+  catch(e){
+    return global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message: null , guid, err:'WebUi ask layer one generate new block exception:' + e.toString()});
+  }
 }
 
 const rpcDirectHandler = {
-  webUiAction
+  webUiAction, webUiGenerateBlock
 }
 
 exports.rpcDirect = (message) => {
