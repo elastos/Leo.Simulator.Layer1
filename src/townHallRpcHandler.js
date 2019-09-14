@@ -25,7 +25,7 @@ const webUiAction = ({from, guid, messageObj})=>{
       o('log', 'I have response WebUi OK');
     }	
   });	  
-}
+};
 
 const webUiGenerateBlock =  ({from, guid, messageObj})=>{
   
@@ -45,10 +45,24 @@ const webUiGenerateBlock =  ({from, guid, messageObj})=>{
   catch(e){
     return global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message: null , guid, err:'WebUi ask layer one generate new block exception:' + e.toString()});
   }
-}
+};
+
+const ping = ({from, guid})=>{
+  o('debug', `I receive another peer ${from} ping. I response my userInfo`);
+  const resMessage = {
+    type:'pong',
+    userInfo:null,
+    specialRole:'LayerOneBlockChain'
+  };
+  global.rpcEvent.emit('rpcResponse', {
+    sendToPeerId: from,
+    message: JSON.stringify(resMessage),
+    guid
+  });
+};
 
 const rpcDirectHandler = {
-  webUiAction, webUiGenerateBlock
+  webUiAction, webUiGenerateBlock, ping
 }
 
 exports.rpcDirect = (message) => {
