@@ -3,30 +3,7 @@ const { tryParseJson} = utilities;
 import o from './logWebUi';
 import {generateBlock} from './generateBlock';
 
-const webUiAction = ({from, guid, messageObj})=>{
-  if(from != global.webUiPeerId){
-    return o('error', 'Only WebUi peer can send me the webUiAction message.')
-  }
-  const {initiatorUserName, action} = messageObj;	
-  const onlineUserInfo = global.onlinePeerUserCache.getByUserName(initiatorUserName);	
-  if(! onlineUserInfo)	
-    return global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message: null , guid, err:'cannot find this online user:' + initiatorUserName});
-    
-  const newWrapper = {	
-    type:'simulatorRequestAction',	
-    action	
-  }	
-  global.pubsubRooms.townHall.rpcRequest(onlineUserInfo.peerId, JSON.stringify(newWrapper), (result, error)=>{	
-    console.log("response from initiator", result, error);	
-    if(error){	
-      return global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message: null , guid, err:error});
-    }	
-    else{	
-      global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message:`{res:'ok'}`, guid});
-      o('log', 'I have response WebUi OK');
-    }	
-  });	  
-};
+
 
 const webUiGenerateBlock =  ({from, guid, messageObj})=>{
   
@@ -63,7 +40,7 @@ const ping = ({from, guid})=>{
 };
 
 const rpcDirectHandler = {
-  webUiAction, webUiGenerateBlock, ping
+  webUiGenerateBlock, ping
 }
 
 exports.rpcDirect = (message) => {
