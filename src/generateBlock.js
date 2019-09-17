@@ -73,13 +73,14 @@ const runSettlementBeforeNewBlock = ()=>{
         if (settleNewNodeRa(initiator, taskCid, globalState, allChildrenTasks)){
           delete pendingTasks[taskCid];
         };
+        o('status', 'New node joined, remote attestation completed. Reward / penalty issued. You can see the change in next block')
         //console.log('after settleNewNodeRa, globalState gasMap, creditMap, pendingTasks', globalState.gasMap, globalState.creditMap, globalState.pendingTasks)
         break;
       }//case
       case 'computeTask':{
         const {startBlockHeight, initiator, followUps} = pendingTasks[taskCid];
         if(global.blockMgr.getLatestBlockHeight()  - startBlockHeight < minBlockDelayRequiredBeforeComputeStart){
-          console.log('we will need to wait more blocks until we can start computing. Let those slow nodes get more time responding the VRF');
+          o('status','we will need to wait more blocks until we can start computing. Let those slow nodes get more time responding the VRF');
           break;
         }
         if((global.blockMgr.getLatestBlockHeight()  - startBlockHeight) < maxBlockDelayRequiredBeforeComputeStart){
@@ -89,7 +90,7 @@ const runSettlementBeforeNewBlock = ()=>{
           }
           else{
             //we did not wait enough time but the followUps number has reached the minimal requriement, so we can start now
-            o('debug', 'we did not wait enough time but the followUps number has reached the minimal requriement, so we can start now');
+            o('status', 'we did not wait enough time but the followUps number has reached the minimal requriement, so we can start now');
             
             globalState.pendingTasks[taskCid].type = 'computeTaskStart';
             break;
@@ -99,12 +100,12 @@ const runSettlementBeforeNewBlock = ()=>{
           if(followUps.length < minComputeGroupMembersToStartCompute){
             //we have wait long enough, cannot wait any longer. we need to start anyway even the members of compute group yet not reach min requirement
             //what we need to do is to postpone
-            console.log("We have reached maxBlockDelayRequiredBeforeComputeStart but still did not get enough compute group members. so we have to put the task CID back to the processedTxs again so that other nodes have the 2nd chance to try VRF")
+            o('status', "We have reached maxBlockDelayRequiredBeforeComputeStart but still did not get enough compute group members. so we have to put the task CID back to the processedTxs again so that other nodes have the 2nd chance to try VRF")
             globalState.processedTxs.push({txType:'computeTask', cid:taskCid});
             break;
           }
           else{
-            o('debug', 'we have waited enough time and the followUps number has reached the minimal requriement, so we can start now');
+            o('status', 'we have waited enough time and the followUps number has reached the minimal requriement, so we can start now');
             globalState.pendingTasks[taskCid].type = 'computeTaskStart';
             break;
           }
@@ -117,7 +118,7 @@ const runSettlementBeforeNewBlock = ()=>{
           delete globalState.escrowGasMap[taskCid];
           delete globalState.pendingTasks[taskCid];
         }
-        console.log('case computeTaskDone, gasMap,', globalState.gasMap);
+        o('status', 'Compute Task Done. Reward / Penalty issued. Changes will be shown in next block');
         break;
       }
     }//switch
@@ -168,26 +169,10 @@ const settleNewNodeRa = (initiator, taskCid, globalState, allChildrenTasks)=>{
     //console.log('user u, add credit', {u, awardCreditWhenRaSuccessful});
     globalState.gasMap[u] += rewardGasToEach;
     //console.log('user u add gas:', {u, rewardGasToEach});
-
-    log('ra_reward', {
-      name : u,
-      credit : awardCreditWhenRaSuccessful,
-      credit_balance : globalState.creditMap[u],
-      gas : rewardGasToEach,
-      gas_balance : globalState.gasMap[u],
-      cid : taskCid
-    });
   });
   loserArray.forEach(u=>{
     globalState.creditMap[u] -= penaltyCreditWhenRaFail;
     //console.log('user u, lose gas:', {u, penaltyCreditWhenRaFail});
-
-    log('ra_penalty', {
-      name : u,
-      credit : penaltyCreditWhenRaFail,
-      credit_balance : globalState.creditMap[u],
-      cid : taskCid
-    });
   });
   
   delete globalState.escrowGasMap[taskCid];
