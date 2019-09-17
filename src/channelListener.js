@@ -1,9 +1,8 @@
 import taskRoomMessageHandler from './taskRoomMessageHandler';
 import Room from 'ipfs-pubsub-room';
 import townHallJoinLeftHandler from './townHallJoinLeftHandler';
-import {utilities} from 'leo.simulator.shared';
 import townHallRpcHandler from './townHallRpcHandler'
-const {o} = utilities;
+import o from './logWebUi';
 const createRandomGeoLocation = (n)=>{
   var data=[];   
   for (var i=0; i < n; i++) {
@@ -76,7 +75,13 @@ exports.channelListener = (randRoomPostfix, presetUsers, rpcEvent)=>{
   townHall.on('stopped', ()=>o('error', `*******   townHall is stopped`));
   townHall.on('rpcDirect', townHallRpcHandler.rpcDirect);
     
-  
+  global.log = (type, content)=>{
+    if(! global.webUiPeerId){
+      return;
+    }
+    townHall.sendTo(global.webUiPeerId, JSON.stringify({type, content}));
+    
+  }
   const blockRoom = Room(ipfs, 'blockRoom' + randRoomPostfix);
   blockRoom.on('peer joined', (peer)=>peer);//console.log(console.log('peer ' + peer + ' joined task room')));
   blockRoom.on('peer left', peer=>peer);//console.log('peer ' + peer + ' left task room'));

@@ -1,5 +1,5 @@
-import {constValue, utilities} from 'leo.simulator.shared';
-const {o} = utilities;
+import {constValue} from 'leo.simulator.shared';
+import o from './logWebUi';
 
 
 const log=()=>{};//skip for now

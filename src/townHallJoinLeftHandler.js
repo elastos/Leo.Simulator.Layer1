@@ -1,5 +1,4 @@
 
-const log = ()=>{};
 exports.join = (ipfs, room, options, presetUsers)=>{
   return (peer)=>{
     //console.log("someone Joined townhall, asking its userinfo now ", peer);
@@ -25,11 +24,6 @@ exports.join = (ipfs, room, options, presetUsers)=>{
       }
       else if(userInfo){
         global.onlinePeerUserCache.put(peer, userInfo.userName, userInfo);
-      
-        log('user_online', {
-          name : userInfo.userName,
-          ipfs_id :peer
-        });
         
       }else if(type == 'requestRandomUserInfo'){
         
@@ -57,10 +51,5 @@ exports.left = (ipfs, room, options)=>{
   return (peer)=>{
     const userName = global.onlinePeerUserCache.getByPeerId(peer);
     global.onlinePeerUserCache.removeByPeerId(peer);
-    
-    log('user_offline', {
-      name : userName,
-      ipfs_id : peer
-    });
   }
 };

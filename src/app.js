@@ -4,10 +4,9 @@ const {channelListener} = require('./channelListener');
 const {generateBlock} = require('./generateBlock');
 import PeerUserCache from './onlinePeerUser';
 const {utils} = require('vrf.js');
-import {utilities} from 'leo.simulator.shared';
 import inquirer from 'inquirer';
 import {blockMgr as BlockMgr} from 'leo.simulator.shared';
-const {o} = utilities;
+import o from './logWebUi';
 import events from 'events';
 
 exports.start = ()=>{  // Prompt user to input data in console.

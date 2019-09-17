@@ -1,5 +1,6 @@
 import {utilities} from 'leo.simulator.shared';
-const {o, tryParseJson} = utilities;
+const { tryParseJson} = utilities;
+import o from './logWebUi';
 import {generateBlock} from './generateBlock';
 
 const webUiAction = ({from, guid, messageObj})=>{
@@ -37,7 +38,7 @@ const webUiGenerateBlock =  ({from, guid, messageObj})=>{
     await generateBlock({ipfs, globalState, blockRoom});
     global.rpcEvent.emit('rpcResponse',{sendToPeerId:from, message:`{res:'ok'}`, guid});
     
-    return o('log', 'I have response WebUi OK');
+    return ;//o('log', 'I have response WebUi OK');
   }
   try{
     asyncWrapper();
@@ -101,6 +102,5 @@ exports.rpcRequest = (room)=>(args)=>{
 }
 exports.rpcResponse =  (room)=>(args)=>{
   const {sendToPeerId, message, guid, err} = args;
-  o('debug', 'inside exports.rpcResponse:', sendToPeerId, message, guid, err);
   room.rpcResponse(sendToPeerId, message, guid, err);
 }

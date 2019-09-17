@@ -4,11 +4,8 @@ const {tryParseJson, minimalNewNodeJoinRaDeposit, expectNumberOfRemoteAttestator
 import {sha256} from 'js-sha256';
 import { ecvrf, sortition} from 'vrf.js';
 import Big from 'big.js';
+import o from './logWebUi';
 
-import {utilities} from 'leo.simulator.shared/shared';
-
-const {o} = utilities;
-const log=()=>{};//Jacky, disable for now
 
 export default async (m)=>{
   const globalState = {...global.globalState};
@@ -200,14 +197,7 @@ const gasTransferProcess = async (globalState, messageObj)=>{
     if(! globalState.gasMap[toUserName])  globalState.gasMap[toUserName] = amt;
     else globalState.gasMap[toUserName] += amt;
 
-    log('gas_transfer', {
-      from : fromUserName,
-      to : toUserName,
-      amt : amt,
-      from_balance : globalState.gasMap[fromUserName],
-      to_balance : globalState.gasMap[toUserName]
-    });
-
+    o('status', 'gas transfer done');
     return globalState;
   }else{
     o('log', "gasTransferProcess error tx.value, globalState,", tx.value, globalState);
@@ -243,11 +233,7 @@ const newNodeJoinNeedRaProcess = async (globalState, messageObj)=>{
     followUps:  []
   };
 
-  log('new_ra', {
-    name : userName,
-    amt : depositAmt,
-    cid : cid
-  });
+  o('status', 'new node join RA posted');
   return globalState;
 }
 
@@ -278,12 +264,6 @@ const remoteAttestationDoneProcess = async (globalState, messageObj)=>{
     const reason = 'VRF verify failed';
     console.log('remoteAttestationDoneProcess fail, ', reason);
 
-    log('ra_done', {
-      name : userName,
-      vrf : false,
-      cid : taskCid,
-      reason
-    })
     throw new Error('remoteAttestationDoneProcess fail, ', reason)
   }
   const block = (await ipfs.dag.get(blockCid)).value;
@@ -300,11 +280,6 @@ const remoteAttestationDoneProcess = async (globalState, messageObj)=>{
   };
   globalState.pendingTasks[taskCid].followUps.push(raDoneCid);
 
-  log('ra_done', {
-    vrf : true,
-    name : userName,
-    cid : taskCid,
-  })
   return globalState;
 };
 
@@ -319,6 +294,7 @@ const takeEscrow = (globalState, userName, depositAmt, taskCid)=>{
     return true;
   }else{
     console.log("takeEscrow error ,", {userName, depositAmt, taskCid});
+    o('error', `User ${userName} cannot afford deposit and failed in escrow. Task abort`);
     return false;
   };
 };
@@ -335,6 +311,7 @@ const updateLambda = async (globalState, messageObj, from)=>{
   o('log','++++++++++  But please copy this lambda task CID for future reference+++++++');
   o('log', "        " + cid + "         ");
   o('log', '------------------------------------------------------------------------------');
+  o('status', 'New Lambda CID psoted: ' + cid);
   return globalState;
 }
 
@@ -374,6 +351,6 @@ const computeTask = async (globalState, messageObj, from)=>{
     followUps:  []
   };
   
-  o('log', 'computeTask push into pendingTasks');
+  o('status', 'computeTask push into pendingTasks');
   return globalState;
 }
