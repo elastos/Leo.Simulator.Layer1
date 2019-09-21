@@ -281,6 +281,15 @@ const settleComputeTaskTestable = (computeTaskInPending, gasMap, creditMap,  esc
     gasMap[computeTaskInPending.lambdaOwnerName] += lambdaOwnerGas;
     remainingGas -= lambdaOwnerGas;
     console.assert(remainingGas > 0);
+
+    ///**** return deposit gas back to executor and monitors if they are honest */
+    gasMap[executor.userName] += computeTaskInPending.depositAmt;
+    remainingGas -= computeTaskInPending.depositAmt;
+    for(let monitor of consensus.agreeMonitors){
+      gasMap[monitor.monitorUserName] += computeTaskInPending.depositAmt;
+      remainingGas -= computeTaskInPending.depositAmt;
+    }    
+
     const rewardToExecutor = remainingGas / 2;
     gasMap[executor.userName] += rewardToExecutor;
     remainingGas -= rewardToExecutor;
@@ -299,7 +308,7 @@ const settleComputeTaskTestable = (computeTaskInPending, gasMap, creditMap,  esc
       creditMap
     }
   }else{
-    o('error', 'We did not get a consensus on this task. We need to handle this. not implemented yet');
+    o('error', 'TODO: We did not get a consensus on this task. We need to handle this. not implemented yet');
   }
   return null;
 };

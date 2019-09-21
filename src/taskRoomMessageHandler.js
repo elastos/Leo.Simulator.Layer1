@@ -226,12 +226,15 @@ const newNodeJoinNeedRaProcess = async (globalState, messageObj)=>{
   }
   if (! takeEscrow(globalState, userName, depositAmt, cid))
     throw new Error('takeEscrow failed')
-  if (!globalState.pendingTasks[cid]) globalState.pendingTasks[cid] = {
-    type: 'newNodeJoinNeedRa',
-    initiator: userName,
-    startBlockHeight: globalState.blockHeight + 1,
-    followUps:  []
-  };
+  if (!globalState.pendingTasks[cid]){ 
+    globalState.pendingTasks[cid] = {
+      type: 'newNodeJoinNeedRa',
+      initiator: userName,
+      startBlockHeight: globalState.blockHeight + 1,
+      depositAmt,
+      followUps:  []
+    };
+  }
 
   o('status', 'new node join RA posted');
   return globalState;
@@ -341,16 +344,18 @@ const computeTask = async (globalState, messageObj, from)=>{
   const {peerId: initiatorPeerId} = global.onlinePeerUserCache.getByUserName(userName);
   if(! initiatorPeerId) throw 'compute task owner is not online at this moment. The excutor will not get the task data, so the task code wont be available. task abort';
 
-  if (!globalState.pendingTasks[cid]) globalState.pendingTasks[cid] = {
-    type: 'computeTask',
-    initiator: userName,
-    initiatorPeerId,
-    lambdaOwnerName,
-    lambdaOwnerPeerId,
-    startBlockHeight: globalState.blockHeight + 1,//starting next block
-    followUps:  []
-  };
-  
+  if (!globalState.pendingTasks[cid]){
+    globalState.pendingTasks[cid] = {
+      type: 'computeTask',
+      initiator: userName,
+      initiatorPeerId,
+      lambdaOwnerName,
+      lambdaOwnerPeerId,
+      startBlockHeight: globalState.blockHeight + 1,//starting next block
+      depositAmt,
+      followUps:  []
+    };
+  }
   o('status', 'computeTask push into pendingTasks');
   return globalState;
 }
