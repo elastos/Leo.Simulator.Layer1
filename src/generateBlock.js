@@ -209,7 +209,7 @@ const settleComputeTask = async (globalState, taskCid)=>{
   return globalState;
 }
 const settleComputeTaskTestable = (computeTaskInPending, gasMap, creditMap,  escrowTotal, lambdaOwnerGas)=>{
-  console.log("gasMap before settleComputeTask,", gasMap);
+  //console.log("gasMap before settleComputeTask,", gasMap);
   const {taskOwner, executor, monitors} = computeTaskInPending.result;
   const moreThanHalfCreditOfMonitorsAgreeTheExecutor = ()=>{
     let agreeCredit = 0;

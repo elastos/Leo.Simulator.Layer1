@@ -48,13 +48,13 @@ const computeTaskWinnerApplication = async ( globalState, messageObj, from)=>{
   const {userName, taskCid, ...simplifiedMessageObjInBlock} = messageObj;
   const taskObj = (await ipfs.dag.get(taskCid)).value;
   const {depositAmt} = taskObj;
-  console.log('inside computeTaskWinnerApplication', {userName, depositAmt, taskCid, depositAmt});
+  //console.log('inside computeTaskWinnerApplication', {userName, depositAmt, taskCid, depositAmt});
   if (! takeEscrow(globalState, userName, depositAmt, taskCid))
     throw 'computeTaskWinnerApplication cannot escrow, Probably caused by the application owner does not have enough gas to pay for escrow. abort';
   
   simplifiedMessageObjInBlock.peerId = from;
   
-  console.log('This will be written into pendingTasks followUps', simplifiedMessageObjInBlock);
+  //console.log('This will be written into pendingTasks followUps', simplifiedMessageObjInBlock);
   
   globalState.pendingTasks[taskCid].followUps.push(simplifiedMessageObjInBlock);
   return globalState;
@@ -111,7 +111,7 @@ const computeTaskOwnerConfirmationDone = ( globalState, messageObj, from)=>{
   //   userName: 'user #2',
   //   taskCid: 'bafyreic6bghpwow4lmjsvcy5pi5grqpwol62ousmsx475pyuzxpqqbdsde'
   // }
-  o('debug', 'inside computeTaskOwnerConfirmationDone', messageObj);
+  //o('debug', 'inside computeTaskOwnerConfirmationDone', messageObj);
   const {executorName, taskOwnerName, taskCid, result} = messageObj;
   const computeTaskInPending = globalState.pendingTasks[taskCid];
   console.assert(computeTaskInPending, 'while the task is still on going, it must be exists in pendingTasks');
@@ -122,7 +122,7 @@ const computeTaskOwnerConfirmationDone = ( globalState, messageObj, from)=>{
     result,
     peerId: from
   }
-  o('debug', 'computeTaskInPending.result.taskOwner = ', computeTaskInPending.result);
+  //o('debug', 'computeTaskInPending.result.taskOwner = ', computeTaskInPending.result);
   const r = markComputeTaskDoneIfAllRaCompleted(computeTaskInPending, globalState.blockHeight);
   if(r){
     computeTaskInPending.type = 'computeTaskDone';
@@ -139,7 +139,7 @@ const markComputeTaskDoneIfAllRaCompleted = (computeTaskInPending, currentBlockH
   if(! monitors) return  false;//o('log', 'missing monitor in markComputeTaskDoneIfAllRaCompleted');
   if(! executor) return  false;//o('log', 'missing executor in markComputeTaskDoneIfAllRaCompleted');
   if(Object.keys(monitors).length < minComputeGroupMembersToStartCompute)  return false;//o('log', 'Monitors are not enough in markComputeTaskDoneIfAllRaCompleted');
-  o('debug', 'inside markComputeTaskDone, the computeTaskInPending is,', computeTaskInPending);
+  //o('debug', 'inside markComputeTaskDone, the computeTaskInPending is,', computeTaskInPending);
   
   const taskOwnerHasGotResult = ()=>{
     if(! taskOwner)
